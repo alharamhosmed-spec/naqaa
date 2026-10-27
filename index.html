@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>نقاء</title>
+<title>متقن لإدارة المشاريع - نقاء</title>
 <meta name="description" content="نقاء — إدارة ومراقبة نظافة دورات المياه والنفايات غير الطبية بمستشفى الحرم">
 <meta name="theme-color" content="#0F2A3F">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="نقاء">
-<meta name="application-name" content="نقاء">
+<meta name="apple-mobile-web-app-title" content="متقن نقاء">
+<meta name="application-name" content="متقن لإدارة المشاريع - نقاء">
 <meta name="author" content="مدير إدارة المشاريع: م. أحمد بندر الردادي">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -24,11 +24,12 @@
 window.APP_CONFIG = {
   // رابط النشر حق نظام «نقاء» في Google Apps Script (ينتهي بـ /exec)
   GAS_URL: 'https://script.google.com/macros/s/AKfycbxbBLo4nXev5N3ir_AJuhbKVaz9805B99mVrl5mw24zW-B9aQU4_fzu-gx4z4vTblBh/exec',
+  BRAND: 'متقن لإدارة المشاريع',
   NAME: 'نقاء',
   SUB: 'نظافة دورات المياه والنفايات غير الطبية',
   ORG: 'مستشفى الحرم',
   OWNER: 'مدير إدارة المشاريع: م. أحمد بندر الردادي',
-  VERSION: '2.0.0',
+  VERSION: '2.1.0',
   KEY: 'naqaa',               // بادئة التخزين المحلي — كل تطبيق ببادئته (نفس النطاق github.io)
   PASS: ['r', 'b', 'id'],     // باراميترات تُمرَّر للنظام (فتح دورة/حاوية مباشرة من باركود يشير للتطبيق)
   LOAD_TIMEOUT_MS: 25000
@@ -64,7 +65,8 @@ body{font-family:var(--font);color:var(--text);-webkit-font-smoothing:antialiase
   background:linear-gradient(135deg,#0F2A3F,#0E7C7B);color:#fff;text-align:center;padding:24px;transition:opacity .35s}
 .splash.out{opacity:0;pointer-events:none}
 .splash img{width:96px;height:96px;border-radius:24px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
-.splash h1{margin:6px 0 0;font-size:24px;font-weight:700}
+.splash .brand{margin-top:6px;font-size:13px;font-weight:600;color:#A9D8D4}
+.splash h1{margin:0;font-size:26px;font-weight:700}
 .splash p{margin:0;color:#CDEBE8;font-size:14px;max-width:340px;line-height:1.7}
 .spin{width:32px;height:32px;margin-top:10px;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .8s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
@@ -98,6 +100,7 @@ body{font-family:var(--font);color:var(--text);-webkit-font-smoothing:antialiase
 
 <div class="splash" id="splash">
   <img src="icon-192.png" alt="">
+  <div class="brand" id="spBrand">متقن لإدارة المشاريع</div>
   <h1 id="spName">نقاء</h1>
   <p id="spSub"></p>
   <div class="spin"></div>
@@ -150,10 +153,11 @@ body{font-family:var(--font);color:var(--text);-webkit-font-smoothing:antialiase
   var loaded = false, timer = null;
   var year = new Date().getFullYear();
 
+  $('spBrand').textContent = C.BRAND || '';
   $('spName').textContent = C.NAME || '';
   $('spSub').textContent = C.SUB || '';
-  $('spCopy').textContent = '© ' + year + ' جميع الحقوق الفكرية محفوظة — ' + (C.OWNER || '');
-  document.title = C.NAME || document.title;
+  $('spCopy').textContent = (C.BRAND ? C.BRAND + ' - ' + C.NAME + ' · ' : '') + '© ' + year + ' جميع الحقوق الفكرية محفوظة — ' + (C.OWNER || '');
+  document.title = C.BRAND ? C.BRAND + ' - ' + C.NAME : (C.NAME || document.title);
   frame.title = C.NAME || '';
 
   function validUrl(u) { return /^https:\/\/script\.google\.com\/(a\/[^\/]+\/)?macros\/s\/[\w-]+\/exec/.test(String(u || '')); }
@@ -168,7 +172,7 @@ body{font-family:var(--font);color:var(--text);-webkit-font-smoothing:antialiase
     $('stTitle').textContent = s[1];
     $('stMsg').textContent = s[2];
     $('stRetry').classList.toggle('hidden', kind === 'config');
-    $('stFoot').textContent = (C.NAME || '') + ' · v' + (C.VERSION || '');
+    $('stFoot').textContent = (C.BRAND ? C.BRAND + ' - ' : '') + (C.NAME || '') + ' · v' + (C.VERSION || '');
     $('state').classList.remove('hidden');
     splash.classList.add('out');
   }
